@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _innerSlider = __webpack_require__(3);
 
-	var _objectAssign = __webpack_require__(6);
+	var _objectAssign = __webpack_require__(9);
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
@@ -188,7 +188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _mixinsEventHandlers2 = _interopRequireDefault(_mixinsEventHandlers);
 
-	var _mixinsHelpers = __webpack_require__(7);
+	var _mixinsHelpers = __webpack_require__(6);
 
 	var _mixinsHelpers2 = _interopRequireDefault(_mixinsHelpers);
 
@@ -357,7 +357,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _trackHelper = __webpack_require__(5);
 
-	var _objectAssign = __webpack_require__(6);
+	var _helpers = __webpack_require__(6);
+
+	var _helpers2 = _interopRequireDefault(_helpers);
+
+	var _objectAssign = __webpack_require__(9);
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
@@ -504,6 +508,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        trackStyle: (0, _trackHelper.getTrackAnimateCSS)((0, _objectAssign2['default'])({ left: currentLeft }, this.props, this.state))
 	      });
 	    }
+	  },
+	  onInnerSliderEnter: function onInnerSliderEnter(e) {
+	    if (this.props.autoplay && this.props.pauseOnHover) {
+	      this.pause();
+	    }
+	  },
+	  onInnerSliderLeave: function onInnerSliderLeave(e) {
+	    if (this.props.autoplay && this.props.pauseOnHover) {
+	      this.autoPlay();
+	    }
 	  }
 	};
 
@@ -632,38 +646,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	function ToObject(val) {
-		if (val == null) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	module.exports = Object.assign || function (target, source) {
-		var from;
-		var keys;
-		var to = ToObject(target);
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = arguments[s];
-			keys = Object.keys(Object(from));
-
-			for (var i = 0; i < keys.length; i++) {
-				to[keys[i]] = from[keys[i]];
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ },
-/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -678,13 +660,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactLibReactTransitionEvents = __webpack_require__(8);
+	var _reactLibReactTransitionEvents = __webpack_require__(7);
 
 	var _reactLibReactTransitionEvents2 = _interopRequireDefault(_reactLibReactTransitionEvents);
 
 	var _trackHelper = __webpack_require__(5);
 
-	var _objectAssign = __webpack_require__(6);
+	var _objectAssign = __webpack_require__(9);
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
@@ -934,7 +916,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var play = function play() {
 	      if (_this2.state.mounted) {
-	        _this2.slideHandler(_this2.state.currentSlide + _this2.props.slidesToScroll);
+	        if (_this2.props.rtl) {
+	          _this2.slideHandler(_this2.state.currentSlide - _this2.props.slidesToScroll);
+	        } else {
+	          _this2.slideHandler(_this2.state.currentSlide + _this2.props.slidesToScroll);
+	        }
 	      }
 	    };
 	    if (this.props.autoplay) {
@@ -943,6 +929,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        autoPlayTimer: window.setTimeout(play, this.props.autoplaySpeed)
 	      });
 	    }
+	  },
+	  pause: function pause() {
+	    if (this.state.autoPlayTimer) {
+	      window.clearTimeout(this.state.autoPlayTimer);
+	    }
 	  }
 	};
 
@@ -950,7 +941,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -966,7 +957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ExecutionEnvironment = __webpack_require__(9);
+	var ExecutionEnvironment = __webpack_require__(8);
 
 	/**
 	 * EVENT_NAME_MAP is used to determine which event fired when a
@@ -1064,7 +1055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ReactTransitionEvents;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -1103,6 +1094,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = ExecutionEnvironment;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function ToObject(val) {
+		if (val == null) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var keys;
+		var to = ToObject(target);
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = arguments[s];
+			keys = Object.keys(Object(from));
+
+			for (var i = 0; i < keys.length; i++) {
+				to[keys[i]] = from[keys[i]];
+			}
+		}
+
+		return to;
+	};
+
 
 /***/ },
 /* 10 */
@@ -1180,6 +1203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    infinite: true,
 	    initialSlide: 0,
 	    lazyLoad: false,
+	    pauseOnHover: false,
 	    responsive: null,
 	    rtl: false,
 	    slide: 'div',
@@ -1280,7 +1304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactLibCloneWithProps2 = _interopRequireDefault(_reactLibCloneWithProps);
 
-	var _objectAssign = __webpack_require__(6);
+	var _objectAssign = __webpack_require__(9);
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
